@@ -44,13 +44,14 @@ modificarNombre agregado unPersonaje = unPersonaje {nombre= agregado ++ nombre u
 modificarVida :: (Int -> Int) -> Personaje -> Personaje
 modificarVida unaFuncion unPersonaje = unPersonaje { cantidadDeVida = (unaFuncion.cantidadDeVida) unPersonaje }
 
-quiénesEstanEnLasUltimas :: BrawlersEnPartida -> [String]
-quiénesEstanEnLasUltimas unosBrawlers = (map nombreBrawler . filter estaEnLasUltimas) unosBrawlers
-
 atacarConElPoderEspecial :: Personaje -> Personaje -> Personaje
 atacarConElPoderEspecial personajeAtacante personajeAfectado | super personajeAtacante =
                                                              (poderBasico personajeAtacante . superPoder personajeAtacante) personajeAfectado
                                                             |otherwise = personajeAfectado
+
+quiénesEstanEnLasUltimas :: BrawlersEnPartida -> [String]
+quiénesEstanEnLasUltimas unosBrawlers = (map nombreBrawler . filter estaEnLasUltimas) unosBrawlers
+
 estaEnLasUltimas :: Personaje -> Bool
 estaEnLasUltimas unPersonaje = ((<800).cantidadDeVida) unPersonaje
 
