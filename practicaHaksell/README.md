@@ -1,4 +1,4 @@
-Repositorio de Paradigmas UTN
+
 Repositorio personal de Haksell. Aca estan los ejercicios que fui realizando
 
 Curso K2001 - Lunes Mañana
