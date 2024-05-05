@@ -48,11 +48,11 @@ cobrarAlquileres:: Accion
 cobrarAlquileres unJugador = modificarDinero (+ (alquilerTotal.precioDeLasPropiedades) unJugador) unJugador
 
 alquilerTotal :: [Int] -> Int
-alquilerTotal unosPreciosDePropiedades = ((10*).cantidadPropiedades (<150)) unosPreciosDePropiedades +
-                                         ((20*).cantidadPropiedades (>150)) unosPreciosDePropiedades
+alquilerTotal unosPreciosDePropiedades = ((10*).cantidadPropiedadesDeValor (<150)) unosPreciosDePropiedades +
+                                         ((20*).cantidadPropiedadesDeValor (>150)) unosPreciosDePropiedades
 
-cantidadPropiedades :: (Int->Bool)-> [Int] -> Int
-cantidadPropiedades unPrecio unosPreciosDePropiedades = (length.filter unPrecio) unosPreciosDePropiedades 
+cantidadPropiedadesDeValor :: (Int->Bool)-> [Int] -> Int
+cantidadPropiedadesDeValor unPrecio unosPreciosDePropiedades = (length.filter unPrecio) unosPreciosDePropiedades 
 
 precioDeLasPropiedades :: Jugador -> [Int]
 precioDeLasPropiedades unJugador = map precioDeLaPropiedad $ propiedadesCompradas unJugador

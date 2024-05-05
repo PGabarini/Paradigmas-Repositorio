@@ -28,8 +28,9 @@ bolaDeEspinas unPersonaje = modificarVida (max 0 . subtract 1000) unPersonaje
 
 
 granadaDeEspinas :: RadioDeGranada -> SuperPoder
-granadaDeEspinas radioGranada unPersonaje | radioGranada<3 && cantidadDeVida unPersonaje<800 =
+granadaDeEspinas radioGranada unPersonaje | radioGranada<3 && estaEnLasUltimas unPersonaje =
                                          (modificarNombre "espinas estuvo aqui".modificarSuper False .modificarVida (min 0 )) unPersonaje
+                                         | radioGranada<3 = modificarNombre "espinas estuvo aqui" unPersonaje
                                         | otherwise = bolaDeEspinas unPersonaje
 
 torretaCurativa :: SuperPoder
