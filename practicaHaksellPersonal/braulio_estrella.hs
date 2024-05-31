@@ -1,5 +1,4 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-{-# HLINT ignore "Eta reduce" #-}
+
 
 data Personaje = UnPersonaje {nombre :: String , poderBasico :: PoderBasico,
                     superPoder :: SuperPoder, super :: Bool, cantidadDeVida :: Int}
