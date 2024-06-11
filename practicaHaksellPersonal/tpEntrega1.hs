@@ -102,13 +102,14 @@ año2015 :: Año
 año2015 = UnAño 2015 []
 
 pasoDeUnAño :: Año -> Ciudad -> Ciudad
-pasoDeUnAño unAño unaCiudad = foldr ($) unaCiudad (eventos unAño)
+pasoDeUnAño unAño unaCiudad = foldr ($) unaCiudad (reverse.eventos $ unAño)
 
 algoMejor :: Ciudad -> (Ciudad -> Float) -> Evento-> Bool
 algoMejor unaCiudad unCriterio unEvento  =  unCriterio unaCiudad < (unCriterio.unEvento $ unaCiudad)
 
 cantidadDeAtracciones :: Ciudad -> Float
 cantidadDeAtracciones unaCiudad = fromIntegral.length.atracciones $ unaCiudad
+
 {-
 Criterios 
 
@@ -118,13 +119,13 @@ cantidadDeAtracciones :: Ciudad -> Float
 
 --
 atracciones :: Ciudad -> [String]
-
 -}
-{-costoDeVidaQueSuba :: Año -> Ciudad -> Ciudad
-costoDeVidaQueSuba unAño unaCiudad = pasoDeUnAño (unAño {eventos = filter (algoMejor unaCiudad "Costo de vida") $ eventos unAño}) unaCiudad
--}
-
 {-
+costoDeVidaQueSuba :: Año -> Ciudad -> Ciudad
+costoDeVidaQueSuba unAño unaCiudad = pasoDeUnAño (unAño {eventos = filter (algoMejor unaCiudad costoDeVida) $ eventos unAño}) unaCiudad
+
+
+
 costoDeVidaQueBaje :: Año -> Ciudad -> Ciudad
 costoDeVidaQueBaje unAño unaCiudad = pasoDeUnAño (unAño {eventos = filter (not.algoMejor unaCiudad "Costo de vida") $ eventos unAño}) unaCiudad
 -}
@@ -139,7 +140,7 @@ valorQueSuba ::Año -> Ciudad -> Ciudad
 valorQueSuba unAño unaCiudad = pasoDeUnAño (añoConEventosCon (algoMejor unaCiudad costoDeVida) unAño ) unaCiudad
 
 añoConEventosCon ::  (Evento -> Bool) -> Año -> Año
-añoConEventosCon unaCondicion unAño  = unAño {eventos = filter unaCondicion $ eventos unAño}
+añoConEventosCon unCriterio unAño  = unAño {eventos = filter unCriterio $ eventos unAño}
 {-}
 eventosOrdenados :: Año -> Ciudad -> Bool
 eventosOrdenados   (UnAño _ []) _ = True
@@ -151,3 +152,69 @@ eventosOrdenados unAño unaCiudad = foldr (&&) (eventos unAño) (algoMejor unaCi
 costoDeVidaCreciente :: Ciudad ->Evento -> Bool
 costoDeVidaCreciente  unaCiudad unEvento =  (costoDeVida unaCiudad) < (costoDeVida $ unEvento unaCiudad)
 -}
+
+--Comienzo de la entrega 2
+{-}
+type Evento = Ciudad -> Ciudad
+
+data Año = UnAño {numero :: Int , eventos :: [Evento] } deriving Show
+
+-- Ejemploss
+año2015 :: Año
+año2015 = UnAño 2015 []
+
+año2021 :: Año
+año2021 = UnAño 2021 [atravesarCrisis, sumarAtraccion "playa"]
+
+año2022 :: Año
+año2022 = UnAño 2022 [atravesarCrisis, remodelarCiudad 5, reevaluarCiudad 7]
+
+año2023 :: Año
+año2023 = UnAño 2023 [atravesarCrisis, sumarAtraccion "parque", remodelarCiudad 10, remodelarCiudad 20]
+
+-- Punto 1.1
+
+pasoDeUnAño :: Año -> Ciudad -> Ciudad
+pasoDeUnAño unAño unaCiudad = foldr ($) unaCiudad (eventos (modificarEventos reverse unAño))
+
+-- Punto 1.2
+algoMejor :: Ciudad -> (Ciudad -> Float) -> Evento -> Bool
+algoMejor unaCiudad unCriterio unEvento  =  unCriterio unaCiudad < (unCriterio.unEvento $ unaCiudad)
+
+-- Punto 1.3
+costoDeVidaQueSuba :: Año -> Ciudad -> Ciudad
+costoDeVidaQueSuba unAnio unaCiudad = foldr ($) unaCiudad (eventos (modificarEventos (init.reverse) unAnio))
+
+modificarEventos:: ([Evento] -> [Evento]) -> Año -> Año
+modificarEventos unaFuncion unAnio = unAnio {eventos = unaFuncion.eventos $ unAnio}
+
+cantidadDeEventos :: Año -> Int
+cantidadDeEventos unAnio = fromIntegral.length.eventos $ unAnio
+
+--eventosQueSubenCostoDeVida [remodelarCiudad, reevaluarCiudad] 
+--eventosQueBAJANCostoDeVida [atravesarCrisis]  
+
+-- Punto 1.4
+costoDeVidaQueBaje :: Año -> Ciudad -> Ciudad
+costoDeVidaQueBaje unAnio unaCiudad = foldr ($) unaCiudad (eventos (modificarEventos (drop ((cantidadDeEventos unAnio)-1).reverse) unAnio))
+
+-- Punto 1.5
+-- valorQueSuba ???
+
+-- Criterio de ejemplo (usado en un caso de prueba)
+cantidadDeAtracciones :: Ciudad -> Float
+cantidadDeAtracciones unaCiudad = fromIntegral.length.atracciones $ unaCiudad
+
+-- Punto 2.2
+sonCiudadesOrdenadas :: Evento -> [Ciudad] -> Bool
+sonCiudadesOrdenadas _ [] = False --precondicion: debe haber al menos una ciudad
+sonCiudadesOrdenadas _ [_] = True -- caso base: lista unitaria siempre esta ordenada
+sonCiudadesOrdenadas unEvento (cabeza:cola) =  (costoDeVida.unEvento) cabeza < (costoDeVida.unEvento.head) cola && sonCiudadesOrdenadas unEvento cola
+-- la idea recursiva es que me fijo si el elemento actual esta ordenado respecto de aquel
+-- a su derecha, y si el resto de la lista esta ordenada
+
+-- Punto 2.3
+sonAñosOrdenados :: [Año] -> Ciudad -> Bool
+sonAñosOrdenados [] _ = False
+sonAñosOrdenados [_] _ = True
+sonAñosOrdenados (cabeza:cola) unaCiudad = (costoDeVida.pasoDeUnAño cabeza) unaCiudad < (costoDeVida.(pasoDeUnAño.head) cola)  unaCiudad && sonAñosOrdenados cola unaCiudad-}

@@ -106,3 +106,6 @@ caligrafia unBarbaro = (all (esMayuscula.head) $ habilidades unBarbaro)  &&  (al
 esMayuscula :: Char -> Bool
 esMayuscula = isUpper
 --
+
+dobles :: Num a => [a] -> [a]
+dobles numeros = map (\numero -> numero * 2) numeros
