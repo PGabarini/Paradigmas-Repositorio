@@ -13,8 +13,6 @@ areaTrignagulo base altura = (base * altura) * 0.5
 esAnoBisiesto :: Int-> Bool
 esAnoBisiesto unAño = esMultiploDe 400 unAño || esMultiploDe 4 unAño && not (esMultiploDe 100 unAño)
 
-
-
 {- DISPERSION
 Trabajamos con tres números que imaginamos como el nivel del río Paraná a la altura 
 de Corrientes medido en tres días consecutivos; cada medición es un entero que representa una cantidad de cm.
