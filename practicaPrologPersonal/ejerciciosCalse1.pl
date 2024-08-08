@@ -200,3 +200,58 @@ paginasSegunTipo(libroDeCuentos(CantidadDeCuentos),CantidadDePaginas):-
 paginasSegunTipo(cientifico(_),1000).
 
 paginasSegunTipo(bestSeller(_,CantidadDePaginas),CantidadDePaginas).
+
+% Queremos saber el puntaje de un autor, este se calcula como `3 * cantidad de obras best seller que escribió. 
+%Recordemos que ya tenemos un predicado esBestSeller
+
+puntaje(Autor,Puntaje):-
+    cantidadDeBestSellersDeAutor(Autor,Cantidad),
+    Puntaje is 3 *Cantidad.
+
+cantidadDeBestSellersDeAutor(Autor,Cantidad):-
+    listaBesSellers(Autor,Lista),
+    length(Lista, Cantidad).
+    
+listaBesSellers(Autor,Lista):-
+    escribio(Autor,_),
+    findall(Obra, esCribioBestSeller(Autor,Obra), Lista).
+    
+ esCribioBestSeller(Autor,Obra):-
+    escribio(Autor,Obra),
+    esBestSeller(Obra).
+
+% Ahora queremos saber también qué best sellers le gustan a Gus
+
+bestSellerDeGus(ListaDeGus):-
+    findall(Obra,esBestSeellerYLeGustaAGus(Obra),ListaDeGus).
+
+esBestSeellerYLeGustaAGus(Obra):-
+    leGustaAGus(Obra),
+    esBestSeller(Obra).
+
+% se incorpora un nuevo tipo de obra: fantastica(ElementosMágicos)
+% queremos ver si la obra de tipo fantástica es copada. Esto ocurre cuando uno de sus elementos es un rubi.
+% por ejemplo agregamos a nuestra base de conocimientos: 
+esDeTipo(sandman, fantastica([yelmo, bolsaDeArena, rubi])).
+
+esTipoCopado(fantastica(ElementosMagicos)) :-
+    member(rubi,ElementosMagicos).
+
+
+
+% Por último, queremos saber el promedio de copias que vendió un autor.
+
+promedio(Autor,PromedioDeCopias):-
+    listaDeCopiasDeObras(Autor,Lista),
+    length(Lista,CantidadDeObrasVendidas),
+    sum_list(Lista, SumatoriaDeCopias),
+    PromedioDeCopias is SumatoriaDeCopias/CantidadDeObrasVendidas.
+
+listaDeCopiasDeObras(Autor,Lista):-
+    escribio(Autor,_).
+    findall(Cantidad,ventasDeUnaObraDeUnAutor(Autor,Cantidad),Lista).
+
+
+ventasDeUnaObraDeUnAutor(Autor,Cantidad):-
+        escribio(Autor,Obra),
+        copiasVendidas(Obra,Cantidad).
